@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Synchronized Slideshow</title>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+  <script src="/js/serverDate.js"></script>
+  <script>
+    // START CLOCK SCRIPT
+
+    Number.prototype.pad = function(n) {
+      for (var r = this.toString(); r.length < n; r = 0 + r);
+      return r;
+    };
+
+    function updateClock(now, element) {
+      var now = new Date(now);
+
+      var milli = now.getMilliseconds(),
+        sec = now.getSeconds(),
+        min = now.getMinutes(),
+        hou = now.getHours(),
+        mo = now.getMonth(),
+        dy = now.getDate(),
+        yr = now.getFullYear();
+      var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+      var tags = ["month", "day", "years", "hours", "minutes", "seconds", "milliseconds"],
+        corr = [months[mo], dy, yr, hou.pad(2), min.pad(2), sec.pad(2), milli];
+      for (var i = 0; i < tags.length; i++)
+        element.find("." + tags[i]).text(corr[i]);
+
+    }
+
+    function initClock() {
+
+      var browserTimeElement = $("#browserTime"),
+        serverTimeElement = $("#serverTime");
+      // window.setInterval("updateClock()", 1);
+      var seconds;
+      setInterval(() => {
+
+        updateClock(new Date, browserTimeElement);
+        var serverDate = new Date();
+        var serverSeconds = serverDate.getSeconds()
+        updateClock(serverDate, serverTimeElement);
+        if (serverSeconds != seconds) {
+          if (serverSeconds % 2) {
+            console.log("red")
+            $('body').css('background-color', 'red');
+          }
+          else {
+            $('body').css('background-color', 'blue');
+          }
+          seconds = serverSeconds
+        }
+      }, 1)
+    }
+
+    // END CLOCK SCRIPT
+  </script>
+  <style>
+    body {
+      background-color: #666;
+    }
+    
+    #browserTime,
+    #serverTime {
+      font: small-caps bold 43px/150% Arial, Helvetica, sans-serif;
+      text-align: left;
+      width: 50%;
+      margin: 20px auto;
+      color: #333;
+      border-left: 20px solid yellow;
+      padding: 20px;
+    }
+  </style>
+</head>
+
+<body onLoad="initClock()">
+  <div id="browserTime">
+    Browser time
+    <div class="timedate">
+      <a class="month">January</a>
+      <a class="day">1</a>,
+      <a class="years">0</a><br />
+      <a class="hours">12</a> :
+      <a class="minutes">00</a>:
+      <a class="seconds">00</a>:
+      <a class="milliseconds">000</a>
+    </div>
+  </div>
+
+  <div id="serverTime">
+    Server Time
+    <div class="timedate">
+      <a class="month">January</a>
+      <a class="day">1</a>,
+      <a class="years">0</a><br />
+      <a class="hours">12</a> :
+      <a class="minutes">00</a>:
+      <a class="seconds">00</a>:
+      <a class="milliseconds">000</a>
+    </div>
+  </div>
+</body>
+
+</html>
