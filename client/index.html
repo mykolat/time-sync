@@ -40,7 +40,7 @@
       setInterval(() => {
 
         updateClock(new Date, browserTimeElement);
-        var serverDate = new Date();
+        var serverDate = new Date(ServerDate());
         var serverSeconds = serverDate.getSeconds()
         updateClock(serverDate, serverTimeElement);
         if (serverSeconds != seconds) {
